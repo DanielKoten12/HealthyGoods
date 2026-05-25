@@ -123,7 +123,10 @@ const scan = async () => {
       method: 'POST',
       body: formData
     });
-    
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err?.error || 'Request failed');
+    }
     const data = await res.json();
     scanResult.value = data;
   } catch (e) {

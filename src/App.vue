@@ -25,6 +25,7 @@
         <NutriGeniusView 
           v-else-if="currentTab === 'ai'" 
           :can-access="canAccessAI"
+          :menus="menus"
           :profile="profile"
           :is-analyzing="isLoadingRecs"
           :results="recommendations"

@@ -27,9 +27,9 @@
         <div class="space-y-2">
           <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Level Aktivitas</label>
           <select v-model="form.activity_level" class="w-full bg-slate-50 p-4 rounded-2xl border-2 border-transparent focus:border-orange-500 outline-none font-bold transition appearance-none cursor-pointer">
-            <option value="sedentary">Sedentary (Kuliah/Duduk)</option>
-            <option value="lightly_active">Aktif Ringan (Jalan kaki)</option>
-            <option value="moderately_active">Aktif (Olahraga 3-5x)</option>
+            <option value="sedentary">Aktifitas Ringan (Hanya Kuliah)</option>
+            <option value="lightly_active">Aktifitas Sedang (Jalan kaki/olahraga 1-2x)</option>
+            <option value="moderately_active">Aktifitas Tinggi (Olahraga 3-5x)</option>
           </select>
         </div>
 
@@ -68,11 +68,11 @@
            <div class="grid grid-cols-2 gap-4">
               <div class="bg-slate-50 p-5 rounded-3xl border border-slate-100">
                 <p class="text-[9px] font-black text-slate-400 uppercase mb-1">Target Kalori</p>
-                <p class="text-2xl font-black text-slate-800">{{ results.macroTargets.calories }} <span class="text-xs">kCal</span></p>
+                <p class="text-2xl font-black text-slate-800">{{ results?.macroTargets?.calories ?? 0 }} <span class="text-xs">kCal</span></p>
               </div>
               <div class="bg-slate-50 p-5 rounded-3xl border border-slate-100">
                 <p class="text-[9px] font-black text-slate-400 uppercase mb-1">TDEE</p>
-                <p class="text-2xl font-black text-slate-800">{{ Math.round(results.tdee) }} <span class="text-xs">kCal</span></p>
+                <p class="text-2xl font-black text-slate-800">{{ Math.round(results?.tdee ?? 0) }} <span class="text-xs">kCal</span></p>
               </div>
            </div>
 
@@ -124,6 +124,10 @@ const barWidth = (val, key) => {
 };
 
 const analyze = async () => {
+  if (!props.menus || !Array.isArray(props.menus) || props.menus.length === 0) {
+    alert('Menu belum tersedia. Coba refresh atau cek koneksi database.');
+    return;
+  }
   loading.value = true;
   try {
     const res = await fetch('/api/ai/recommend-menu', {
@@ -134,6 +138,10 @@ const analyze = async () => {
         menuDatabase: props.menus
       })
     });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err?.error || 'Request failed');
+    }
     const data = await res.json();
     results.value = data;
     emit('results', data);

@@ -1,12 +1,18 @@
 import express from 'express';
 import multer from 'multer';
+import dotenv from 'dotenv';
 import { GoogleGenAI, Type } from "@google/genai";
+
+dotenv.config();
 
 const router = express.Router();
 const upload = multer({ storage: multer.memoryStorage() });
 
 // Gemini Init
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || '' });
+const apiKey = process.env.GEMINI_API_KEY || '';
+const textModel = process.env.GEMINI_TEXT_MODEL || 'gemini-2.5-flash';
+const visionModel = process.env.GEMINI_VISION_MODEL || 'gemini-2.5-flash';
+const ai = new GoogleGenAI({ apiKey });
 
 /**
  * Endpoint 1: POST /api/ai/recommend-menu
@@ -18,32 +24,35 @@ router.post('/recommend-menu', async (req, res) => {
   if (!userProfile || !menuDatabase) {
     return res.status(400).json({ error: 'User profile and menu database are required.' });
   }
+  if (!apiKey) {
+    return res.status(500).json({ error: 'GEMINI_API_KEY is not configured.' });
+  }
 
   try {
     const prompt = `
-      You are an Expert Dietitian AI Assistant. 
-      Your task is to analyze the user's biometrics and goals, calculate their nutritional needs, and recommend the best meals from our catering database.
+      Anda adalah Asisten Ahli Gizi profesional. 
+      Tugas Anda adalah menganalisis biometrik dan tujuan pengguna, menghitung kebutuhan gizi HARIAN, lalu merekomendasikan menu terbaik dari database katering kami.
 
-      USER PROFILE:
-      - Height: ${userProfile.height} cm
-      - Weight: ${userProfile.weight} kg
-      - Activity Level: ${userProfile.activity_level}
-      - Health Goal: ${userProfile.health_goal}
-      - Allergies: ${userProfile.allergies || 'None'}
+      PROFIL PENGGUNA:
+      - Tinggi: ${userProfile.height} cm
+      - Berat: ${userProfile.weight} kg
+      - Level Aktivitas: ${userProfile.activity_level}
+      - Tujuan: ${userProfile.health_goal}
+      - Alergi: ${userProfile.allergies || 'Tidak ada'}
 
-      CATERING DATABASE:
+      DATABASE KATERING:
       ${JSON.stringify(menuDatabase)}
 
-      INSTRUCTIONS:
-      1. Calculate BMR and TDEE using Mifflin-St Jeor Equation.
-      2. Determine Macro Targets (Protein, Carbs, Fats) in grams.
-      3. Recommend exactly 3 meals from the database that fit the profile.
-      4. EXCLUDE any meal containing ingredients the user is allergic to.
-      5. Provide a short summary/strategy for the user.
+      INSTRUKSI:
+      1. Hitung BMR dan TDEE dengan rumus Mifflin-St Jeor.
+      2. Tentukan target makro HARIAN (Protein, Karbohidrat, Lemak) dalam gram.
+      3. Rekomendasikan tepat 3 menu dari database yang sesuai profil.
+      4. HINDARI menu yang mengandung alergen pengguna.
+      5. Beri ringkasan singkat dalam Bahasa Indonesia yang fokus pada kebutuhan gizi 1 hari.
     `;
 
     const response = await ai.models.generateContent({
-      model: "gemini-3.1-pro-preview",
+      model: textModel,
       contents: prompt,
       config: {
         responseMimeType: "application/json",
@@ -82,8 +91,9 @@ router.post('/recommend-menu', async (req, res) => {
 
     res.json(JSON.parse(response.text));
   } catch (error) {
-    console.error('AI Recommendation Error:', error);
-    res.status(500).json({ error: 'Failed to generate AI recommendations.' });
+    const message = error instanceof Error ? error.message : String(error);
+    console.error('AI Recommendation Error:', message);
+    res.status(500).json({ error: message || 'Failed to generate AI recommendations.' });
   }
 });
 
@@ -95,16 +105,19 @@ router.post('/scan-food', upload.single('image'), async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: 'No image file provided.' });
   }
+  if (!apiKey) {
+    return res.status(500).json({ error: 'GEMINI_API_KEY is not configured.' });
+  }
 
   try {
     const base64Data = req.file.buffer.toString('base64');
     
     const response = await ai.models.generateContent({
-      model: "gemini-3-flash-preview",
+      model: visionModel,
       contents: {
         parts: [
           { inlineData: { data: base64Data, mimeType: req.file.mimetype } },
-          { text: "Analyze this food image. Identify the food name and estimate Calories, Protein, Carbs, and Fats for a standard serving. Output ONLY JSON." }
+          { text: "Analisis gambar makanan ini. Identifikasi nama makanan dan estimasi Kalori, Protein, Karbohidrat, dan Lemak untuk 1 porsi standar. Output ONLY JSON." }
         ]
       },
       config: {
@@ -125,8 +138,9 @@ router.post('/scan-food', upload.single('image'), async (req, res) => {
 
     res.json(JSON.parse(response.text));
   } catch (error) {
-    console.error('AI Vision Error:', error);
-    res.status(500).json({ error: 'Failed to analyze image with AI.' });
+    const message = error instanceof Error ? error.message : String(error);
+    console.error('AI Vision Error:', message);
+    res.status(500).json({ error: message || 'Failed to analyze image with AI.' });
   }
 });
 
