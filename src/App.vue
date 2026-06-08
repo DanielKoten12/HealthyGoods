@@ -26,14 +26,7 @@
           v-else-if="currentTab === 'ai'" 
           :can-access="canAccessAI"
           :menus="menus"
-          :profile="profile"
-          :is-analyzing="isLoadingRecs"
-          :results="recommendations"
-          :get-menu-name="getMenuName"
-          :get-menu-image="getMenuImage"
           @navigate="navigate"
-          @analyze="getRecommendations"
-          @add-to-cart="handleAddToCart"
         />
       </transition>
     </main>
@@ -108,11 +101,11 @@ const fetchMenus = async () => {
     menus.value = await res.json();
   } catch (e) {
     // Elegant fallback data
-    menus.value = [
-      { id: 1, name: 'Salmon Quinoa Bowl', description: 'Salmon panggang dengan biji quinoa organik dan sayuran segar.', calories: 480, image_url: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c' },
-      { id: 2, name: 'Dada Ayam Steam Brokoli', description: 'Dada ayam kukus rempah dengan paket serat lengkap.', calories: 350, image_url: 'https://images.unsplash.com/photo-1432139555190-58524dae6a55' },
-      { id: 3, name: 'Nasi Merah Ikan Pepes', description: 'Kekayaan rempah nusantara dengan ikan kembung pilihan.', calories: 420, image_url: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd' },
-    ];
+      menus.value = [
+        { id: 1, name: 'Bowl Quinoa Salmon Panggang', description: 'Salmon panggang dengan biji quinoa organik dan sayuran segar.', calories: 480, protein: 34, carbs: 42, fats: 16, allergens: ['fish'], image_url: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c' },
+        { id: 2, name: 'Dada Ayam Kukus Brokoli', description: 'Dada ayam kukus rempah dengan paket serat lengkap.', calories: 350, protein: 38, carbs: 24, fats: 9, allergens: [], image_url: 'https://images.unsplash.com/photo-1432139555190-58524dae6a55' },
+        { id: 3, name: 'Nasi Merah Ikan Pepes', description: 'Kekayaan rempah nusantara dengan ikan kembung pilihan.', calories: 420, protein: 30, carbs: 45, fats: 12, allergens: ['fish'], image_url: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd' },
+      ];
   }
 };
 
@@ -142,8 +135,8 @@ const getRecommendations = async (profileData) => {
         summary: "Berdasarkan biometrik Anda, kami menyarankan asupan karbohidrat kompleks lebih tinggi untuk menjaga konsentrasi belajar di kampus.",
         macroTargets: { calories: 2650, protein: 130, carbs: 320, fats: 68 },
         recommendedMenus: [
-          { id: 1, reason: "Salmon Quinoa sangat kaya akan protein dan lemak sehat omega-3." },
-          { id: 3, reason: "Nasi merah pepes memberikan energi stabil tanpa rasa kantuk." }
+          { id: 1, menuName: "Bowl Quinoa Salmon Panggang", reason: "Kaya protein dan lemak sehat omega-3 untuk membantu pemulihan otot dan menjaga kenyang lebih lama." },
+          { id: 3, menuName: "Nasi Merah Ikan Pepes", reason: "Memberikan energi stabil dari karbohidrat kompleks dengan lauk tinggi protein yang tetap ringan." }
         ]
       };
       isLoadingRecs.value = false;

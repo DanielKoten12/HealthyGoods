@@ -182,7 +182,7 @@ app.get('/api/recommendations', async (req, res) => {
 
   try {
     const result = await genAI.models.generateContent({
-      model: 'gemini-3-flash-preview',
+      model: 'gemini-2.5-flash-lite',
       contents: [{ role: 'user', parts: [{ text: prompt }] }],
       config: {
         responseMimeType: 'application/json'

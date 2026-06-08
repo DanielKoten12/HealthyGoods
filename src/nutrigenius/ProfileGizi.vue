@@ -71,21 +71,47 @@
                 <p class="text-2xl font-black text-slate-800">{{ results?.macroTargets?.calories ?? 0 }} <span class="text-xs">kCal</span></p>
               </div>
               <div class="bg-slate-50 p-5 rounded-3xl border border-slate-100">
-                <p class="text-[9px] font-black text-slate-400 uppercase mb-1">TDEE</p>
-                <p class="text-2xl font-black text-slate-800">{{ Math.round(results?.tdee ?? 0) }} <span class="text-xs">kCal</span></p>
+                <p class="text-[9px] font-black text-slate-400 uppercase mb-1">Protein</p>
+                <p class="text-2xl font-black text-slate-800">{{ results?.macroTargets?.protein ?? 0 }} <span class="text-xs">g</span></p>
               </div>
            </div>
 
            <div class="space-y-4">
               <div v-for="(val, key) in macros" :key="key">
                 <div class="flex justify-between text-[10px] font-black text-slate-500 uppercase mb-2">
-                  <span>{{ key }}</span>
-                  <span>{{ val }}g</span>
+                  <span>{{ macroLabel(key) }}</span>
+                  <span>{{ val }}{{ macroUnit(key) }}</span>
                 </div>
                 <div class="h-2 bg-slate-100 rounded-full overflow-hidden">
                   <div class="h-full bg-orange-500 transition-all duration-1000" :style="{ width: barWidth(val, key) + '%' }"></div>
                 </div>
               </div>
+           </div>
+
+           <div class="bg-slate-50 border border-slate-100 rounded-[2rem] p-6 space-y-4">
+             <div class="flex items-center justify-between gap-4">
+               <div>
+                 <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Rekomendasi Makanan</p>
+                 <h4 class="text-lg font-black text-slate-800">Pilihan menu untuk target harianmu</h4>
+               </div>
+               <div v-if="hasAllergyInput" class="px-3 py-2 bg-emerald-100 text-emerald-700 rounded-full text-[10px] font-black uppercase tracking-widest">
+                 Disesuaikan dengan alergi
+               </div>
+             </div>
+
+             <div v-if="recommendedMenus.length" class="space-y-3">
+               <div v-for="menu in recommendedMenus" :key="menu.id" class="bg-white rounded-[1.5rem] border border-slate-100 p-4 flex gap-4 items-center shadow-sm">
+                 <img :src="menu.imageUrl" :alt="menu.menuName" class="w-20 h-20 rounded-[1.25rem] object-cover bg-slate-100 shrink-0" />
+                 <div class="min-w-0 flex-1">
+                   <h5 class="text-base font-black text-slate-800">{{ menu.menuName }}</h5>
+                   <p class="text-xs text-slate-500 leading-relaxed mt-1">{{ menu.reason }}</p>
+                 </div>
+               </div>
+             </div>
+
+             <div v-else class="bg-amber-50 border border-amber-100 rounded-[1.5rem] p-4 text-sm text-amber-700 font-medium">
+               Belum ada menu yang aman untuk alergi yang Anda masukkan. Coba ubah preferensi alergi atau tambahkan pilihan menu lain.
+             </div>
            </div>
         </div>
 
@@ -117,9 +143,37 @@ const form = reactive({
 });
 
 const macros = computed(() => results.value?.macroTargets || {});
+const hasAllergyInput = computed(() => form.allergies.trim().length > 0);
+const recommendedMenus = computed(() => {
+  const menus = Array.isArray(results.value?.recommendedMenus) ? results.value.recommendedMenus : [];
+  const sourceMenus = Array.isArray(props.menus) ? props.menus : [];
+
+  return menus.map((menu) => {
+    const matchedMenu = sourceMenus.find((item) => Number(item.id) === Number(menu.id)) || {};
+
+    return {
+      id: menu.id,
+      menuName: menu.menuName || matchedMenu.name || 'Menu sehat',
+      reason: menu.reason || 'Menu ini dipilih agar selaras dengan kebutuhan gizi Anda.',
+      imageUrl: matchedMenu.image_url || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c'
+    };
+  });
+});
+
+const macroLabel = (key) => {
+  const labels = {
+    calories: 'Kalori',
+    protein: 'Protein',
+    carbs: 'Karbohidrat',
+    fats: 'Lemak'
+  };
+  return labels[key] || key;
+};
+
+const macroUnit = (key) => key === 'calories' ? ' kCal' : ' g';
 
 const barWidth = (val, key) => {
-  const max = key === 'carbs' ? 400 : 200;
+  const max = key === 'calories' ? 3000 : key === 'carbs' ? 400 : 200;
   return Math.min(100, (val / max) * 100);
 };
 

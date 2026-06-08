@@ -47,27 +47,7 @@
       <div v-if="activeTool === 'Profile Gizi'">
         <ProfileGizi 
           :menus="menus" 
-          @results="handleResults"
         />
-        
-        <!-- Recommended Menus (from results) -->
-        <div v-if="aiResults" class="mt-12 bg-white rounded-[3rem] p-10 md:p-14 shadow-xl border border-slate-50">
-          <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-8 px-2">Kombinasi Menu Rekomendasi</p>
-          <div class="grid md:grid-cols-2 gap-6">
-            <div v-for="rec in aiResults.recommendedMenus" :key="rec.id" class="bg-slate-50 hover:bg-orange-50 transition p-6 rounded-[2.5rem] border border-slate-100 flex gap-6 items-center group">
-                <div class="w-24 h-24 rounded-[2rem] overflow-hidden shadow-xl shrink-0">
-                  <img :src="getMenuImage(rec.id)" class="w-full h-full object-cover" />
-                </div>
-                <div class="flex-1">
-                  <h6 class="text-lg font-black text-slate-800 group-hover:text-orange-600 transition">{{ getMenuName(rec.id) }}</h6>
-                  <p class="text-xs text-slate-400 leading-relaxed line-clamp-2">{{ rec.reason }}</p>
-                </div>
-                <button @click="$emit('addToCart', rec.id)" class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-slate-400 group-hover:bg-orange-500 group-hover:text-white transition shadow-sm group-hover:shadow-lg">
-                  <Plus :size="20" strokeWidth="3" />
-                </button>
-            </div>
-          </div>
-        </div>
       </div>
 
       <div v-else>
@@ -79,22 +59,17 @@
 
 <script setup>
 import { ref } from 'vue';
-import { Lock, BarChart3, ChefHat, Plus } from 'lucide-vue-next';
+import { Lock, BarChart3, ChefHat } from 'lucide-vue-next';
 import ProfileGizi from './ProfileGizi.vue';
 import FoodScanner from './FoodScanner.vue';
 
-const props = defineProps(['canAccess', 'getMenuName', 'getMenuImage', 'menus']);
-defineEmits(['navigate', 'addToCart']);
+defineProps(['canAccess', 'menus']);
+defineEmits(['navigate']);
 
 const activeTool = ref('Profile Gizi');
-const aiResults = ref(null);
 
 const benefits = [
   { icon: BarChart3, title: 'Presisi Makro', desc: 'Hitungan gram protein, karbo, dan lemak yang akurat untuk tubuhmu.' },
   { icon: ChefHat, title: 'Menu Dinamis', desc: 'AI akan menyaring menu harian yang paling pas dengan targetmu.' },
 ];
-
-const handleResults = (data) => {
-  aiResults.value = data;
-};
 </script>

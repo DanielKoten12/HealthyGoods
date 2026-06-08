@@ -25,7 +25,7 @@
       <div class="pt-12 border-t border-orange-50 flex flex-col md:flex-row justify-between items-center gap-8">
         <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">© 2026 Healthy Goods Catering ITK. Terdaftar di Kampus Balikpapan.</p>
         <div class="flex gap-4">
-          <a v-for="icon in [Instagram, Twitter, Github]" :key="icon" href="#" class="w-10 h-10 bg-slate-50 text-slate-400 rounded-full flex items-center justify-center hover:bg-orange-50 hover:text-orange-500 transition">
+          <a v-for="icon in [Instagram, Twitter]" :key="icon" href="#" class="w-10 h-10 bg-slate-50 text-slate-400 rounded-full flex items-center justify-center hover:bg-orange-50 hover:text-orange-500 transition">
             <component :is="icon" :size="18" />
           </a>
         </div>
@@ -35,11 +35,9 @@
 </template>
 
 <script setup>
-import { Instagram, Twitter, Github } from 'lucide-vue-next';
+import { Instagram, Twitter} from 'lucide-vue-next';
 
 const links = {
   Layanan: ['Home', 'Menu Harian', 'Paket Catering', 'NutriGenius AI'],
-  Perusahaan: ['Tentang Kami', 'Media Kit', 'Karir', 'Hubungi Kami'],
-  Legal: ['Syarat & Ketentuan', 'Kebijakan Privasi', 'Lisensi']
 };
 </script>

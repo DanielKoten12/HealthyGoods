@@ -76,13 +76,6 @@
       </div>
     </section>
 
-    <!-- Partners -->
-    <section class="max-w-7xl mx-auto px-6 text-center opacity-40 hover:opacity-80 transition duration-500">
-      <p class="text-xs font-black uppercase tracking-[0.3em] text-slate-400 mb-10">Didukung Oleh Mitra Strategis</p>
-      <div class="flex flex-wrap justify-center gap-12 md:gap-24 grayscale">
-        <div v-for="p in 4" :key="p" class="w-32 h-12 bg-slate-200 rounded-lg animate-pulse"></div>
-      </div>
-    </section>
   </div>
 </template>
 
