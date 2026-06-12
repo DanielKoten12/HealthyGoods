@@ -3,8 +3,8 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { createClient } from '@supabase/supabase-js';
 import { GoogleGenAI } from '@google/genai';
-import aiRouter from './src/nutrigenius/ai-routes';
-import { readEnv } from './env';
+import aiRouter from './src/nutrigenius/ai-routes.js';
+import { readEnv } from './env.js';
 
 dotenv.config();
 

@@ -1,7 +1,7 @@
 import express from 'express';
 import { createServer as createViteServer } from 'vite';
 import path from 'path';
-import app from './app';
+import app from './app.js';
 const PORT = 3000;
 
 // Full-stack Vite setup
