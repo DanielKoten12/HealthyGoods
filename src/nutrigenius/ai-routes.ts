@@ -2,6 +2,7 @@ import express from 'express';
 import multer from 'multer';
 import dotenv from 'dotenv';
 import { GoogleGenAI, Type } from "@google/genai";
+import { readEnv } from '../../env';
 
 dotenv.config();
 
@@ -9,9 +10,9 @@ const router = express.Router();
 const upload = multer({ storage: multer.memoryStorage() });
 
 // Gemini Init
-const apiKey = process.env.GEMINI_API_KEY || '';
-const textModel = process.env.GEMINI_TEXT_MODEL || 'gemini-2.5-flash';
-const visionModel = process.env.GEMINI_VISION_MODEL || 'gemini-2.5-flash';
+const apiKey = readEnv('GEMINI_API_KEY');
+const textModel = readEnv('GEMINI_TEXT_MODEL', 'gemini-2.5-flash');
+const visionModel = readEnv('GEMINI_VISION_MODEL', 'gemini-2.5-flash');
 const ai = new GoogleGenAI({ apiKey });
 
 const ALLERGY_ALIASES: Record<string, string[]> = {

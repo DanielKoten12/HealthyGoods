@@ -131,7 +131,7 @@ const scan = async () => {
     scanResult.value = data;
   } catch (e) {
     console.error(e);
-    alert('AI Vision error. Silakan coba lagi.');
+    alert(e instanceof Error ? e.message : 'AI Vision error. Silakan coba lagi.');
   } finally {
     loading.value = false;
   }

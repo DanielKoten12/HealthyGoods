@@ -201,7 +201,7 @@ const analyze = async () => {
     emit('results', data);
   } catch (e) {
     console.error(e);
-    alert('Terjadi kesalahan pada AI. Mohon coba lagi.');
+    alert(e instanceof Error ? e.message : 'Terjadi kesalahan pada AI. Mohon coba lagi.');
   } finally {
     loading.value = false;
   }

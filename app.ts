@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import { createClient } from '@supabase/supabase-js';
 import { GoogleGenAI } from '@google/genai';
 import aiRouter from './src/nutrigenius/ai-routes';
+import { readEnv } from './env';
 
 dotenv.config();
 
@@ -12,8 +13,8 @@ const app = express();
 // Supabase Init
 let supabase: any;
 try {
-  const supabaseUrl = process.env.SUPABASE_URL || '';
-  const supabaseKey = process.env.SUPABASE_KEY || '';
+  const supabaseUrl = readEnv('SUPABASE_URL');
+  const supabaseKey = readEnv('SUPABASE_KEY');
   if (supabaseUrl && supabaseKey) {
     supabase = createClient(supabaseUrl, supabaseKey);
   }
@@ -31,7 +32,7 @@ const checkSupabase = (res: any) => {
 };
 
 // Gemini Init
-const genAI = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || '' });
+const genAI = new GoogleGenAI({ apiKey: readEnv('GEMINI_API_KEY') });
 
 app.use(cors());
 app.use(express.json());
