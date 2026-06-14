@@ -7,6 +7,7 @@
       </div>
       <div class="flex bg-white shadow-sm border border-slate-100 p-2 rounded-2xl gap-2">
         <button v-for="cat in ['Semua', 'Ayam', 'Ikan', 'Veggie']" :key="cat"
+                @click="activeCat = cat"
                 class="px-5 py-2 text-xs font-black uppercase tracking-widest rounded-xl transition"
                 :class="activeCat === cat ? 'bg-orange-500 text-white shadow-md' : 'text-slate-400 hover:text-orange-500'">
           {{ cat }}
@@ -15,7 +16,10 @@
     </header>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      <div v-for="item in menus" :key="item.id" 
+      <div v-if="filteredMenus.length === 0" class="col-span-full bg-white rounded-[2.5rem] p-10 shadow-sm border border-orange-50 text-center text-slate-500">
+        Tidak ada menu untuk kategori {{ activeCat }} saat ini.
+      </div>
+      <div v-for="item in filteredMenus" :key="item.id" 
            @click="selectedItem = item"
            class="bg-white rounded-[2.5rem] p-5 shadow-sm border border-orange-50 flex flex-col cursor-pointer transition hover:shadow-2xl hover:-translate-y-2 group">
         <div class="h-64 bg-slate-100 rounded-[2rem] mb-6 overflow-hidden relative">
@@ -79,13 +83,36 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { Plus, X } from 'lucide-vue-next';
 
-defineProps(['menus']);
+const props = defineProps({
+  menus: {
+    type: [Array, Object],
+    default: () => []
+  }
+});
+
+const menusList = computed(() => {
+  if (Array.isArray(props.menus)) return props.menus;
+  if (props.menus && Array.isArray(props.menus.value)) return props.menus.value;
+  return [];
+});
 
 const activeCat = ref('Semua');
 const selectedItem = ref(null);
+
+const filteredMenus = computed(() => {
+  if (activeCat.value === 'Semua') return menusList.value;
+
+  return menusList.value.filter(item => {
+    const category = item.category ||
+      (item.name?.includes('Ayam') ? 'Ayam' :
+       item.name?.includes('Ikan') || item.name?.includes('Salmon') ? 'Ikan' :
+       '');
+    return category === activeCat.value;
+  });
+});
 
 const macros = (item) => ({
   protein: item.protein || 30,

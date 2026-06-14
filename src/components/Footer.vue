@@ -15,8 +15,8 @@
         <div v-for="(group, name) in links" :key="name">
           <h5 class="font-black text-xs uppercase tracking-[0.2em] text-slate-400 mb-6">{{ name }}</h5>
           <ul class="space-y-4">
-            <li v-for="link in group" :key="link">
-              <a href="#" class="text-sm font-bold text-slate-600 hover:text-orange-500 transition">{{ link }}</a>
+            <li v-for="link in group" :key="link.id">
+              <a href="#" @click.prevent="$emit('navigate', link.id)" class="text-sm font-bold text-slate-600 hover:text-orange-500 transition">{{ link.label }}</a>
             </li>
           </ul>
         </div>
@@ -38,6 +38,11 @@
 import { Instagram, Twitter} from 'lucide-vue-next';
 
 const links = {
-  Layanan: ['Home', 'Menu Harian', 'Paket Catering', 'NutriGenius AI'],
+  Layanan: [
+    { label: 'Home', id: 'home' },
+    { label: 'Menu Harian', id: 'menu' },
+    { label: 'Paket Catering', id: 'catering' },
+    { label: 'NutriGenius AI', id: 'ai' },
+  ],
 };
 </script>
