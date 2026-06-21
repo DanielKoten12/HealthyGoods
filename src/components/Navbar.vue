@@ -3,8 +3,7 @@
     <div class="max-w-7xl mx-auto flex justify-between items-center">
       <!-- Logo -->
       <div class="flex items-center gap-2 cursor-pointer" @click="$emit('navigate', 'home')">
-        <div class="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold text-xl shadow-md">H</div>
-        <h1 class="text-2xl font-black tracking-tight text-orange-600">Healthy<span class="text-green-600">Goods</span></h1>
+        <BrandLogo />
       </div>
 
       <!-- Desktop Menu -->
@@ -63,6 +62,7 @@
 <script setup>
 import { ref } from 'vue';
 import { LogOut, Menu, X } from 'lucide-vue-next';
+import BrandLogo from './BrandLogo.vue';
 
 defineProps(['currentTab', 'user']);
 defineEmits(['navigate', 'login', 'logout']);

@@ -5,8 +5,7 @@
         <!-- Logo & Tagline -->
         <div class="md:col-span-1">
           <div class="flex items-center gap-2 mb-6">
-            <div class="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold text-xl shadow-md">H</div>
-            <h1 class="text-2xl font-black tracking-tight text-orange-600">Healthy<span class="text-green-600">Goods</span></h1>
+            <BrandLogo variant="footer" />
           </div>
           <p class="text-sm text-slate-500 leading-relaxed font-medium">Pelayanan katering mahasiswa berbasis gizi dengan dukungan teknologi AI untuk masa depan yang lebih sehat.</p>
         </div>
@@ -36,6 +35,7 @@
 
 <script setup>
 import { Instagram, Twitter} from 'lucide-vue-next';
+import BrandLogo from './BrandLogo.vue';
 
 const links = {
   Layanan: ['Home', 'Menu Harian', 'Paket Catering', 'NutriGenius AI'],
