@@ -52,30 +52,6 @@
       </div>
     </section>
 
-    <!-- Testimonials -->
-    <section class="bg-slate-50 py-24 px-6 overflow-hidden">
-      <div class="max-w-7xl mx-auto">
-        <div class="text-center mb-16">
-          <h3 class="text-3xl md:text-4xl font-black mb-4">Kata Mereka</h3>
-          <p class="text-slate-500">Mahasiswa ITK yang sudah beralih ke pola makan sehat.</p>
-        </div>
-        <div class="flex gap-6 overflow-x-auto pb-8 scrollbar-hide">
-          <div v-for="testi in testimonials" :key="testi.name" class="min-w-[320px] md:min-w-[400px] bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 flex flex-col gap-6">
-            <div class="flex items-center gap-4">
-              <img :src="testi.image" class="w-14 h-14 rounded-full border-2 border-orange-100" />
-              <div>
-                <h5 class="font-black text-slate-800">{{ testi.name }}</h5>
-                <div class="flex text-yellow-400">
-                  <Star v-for="s in 5" :key="s" :size="14" fill="currentColor" />
-                </div>
-              </div>
-            </div>
-            <p class="text-slate-600 leading-relaxed italic">"{{ testi.quote }}"</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
   </div>
 </template>
 
@@ -90,9 +66,4 @@ const steps = [
   { icon: Rocket, title: 'Antar Cepat', desc: 'Makanan diantar tepat waktu ke kos atau kampus Anda.' },
 ];
 
-const testimonials = [
-  { name: 'Rizwan Firmansyah', image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Rizwan', quote: 'NutriGenius AI beneran ngebantu buat tracking kalori pas lagi sibuk skripsian!' },
-  { name: 'Siti Aminah', image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Siti', quote: 'Menu Ayam Bakar Nasi Merahnya juara banget, gak nyangka makanan sehat bisa seenak ini.' },
-  { name: 'Kevin Pratama', image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Kevin', quote: 'Harga mahasiswa banget tapi kualitasnya gak murahan. Recommended pol!' }
-];
 </script>

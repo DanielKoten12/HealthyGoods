@@ -32,7 +32,7 @@
     </main>
 
     <!-- Component-based Footer -->
-    <Footer />
+    <Footer @navigate="navigate" />
   </div>
 </template>
 
@@ -102,9 +102,9 @@ const fetchMenus = async () => {
   } catch (e) {
     // Elegant fallback data
       menus.value = [
-        { id: 1, name: 'Bowl Quinoa Salmon Panggang', description: 'Salmon panggang dengan biji quinoa organik dan sayuran segar.', calories: 480, protein: 34, carbs: 42, fats: 16, allergens: ['fish'], image_url: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c' },
-        { id: 2, name: 'Dada Ayam Kukus Brokoli', description: 'Dada ayam kukus rempah dengan paket serat lengkap.', calories: 350, protein: 38, carbs: 24, fats: 9, allergens: [], image_url: 'https://images.unsplash.com/photo-1432139555190-58524dae6a55' },
-        { id: 3, name: 'Nasi Merah Ikan Pepes', description: 'Kekayaan rempah nusantara dengan ikan kembung pilihan.', calories: 420, protein: 30, carbs: 45, fats: 12, allergens: ['fish'], image_url: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd' },
+        { id: 1, name: 'Bowl Quinoa Salmon Panggang', category: 'Ikan', description: 'Salmon panggang dengan biji quinoa organik dan sayuran segar.', calories: 480, protein: 34, carbs: 42, fats: 16, allergens: ['fish'], image_url: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c' },
+        { id: 2, name: 'Dada Ayam Kukus Brokoli', category: 'Ayam', description: 'Dada ayam kukus rempah dengan paket serat lengkap.', calories: 350, protein: 38, carbs: 24, fats: 9, allergens: [], image_url: 'https://images.unsplash.com/photo-1432139555190-58524dae6a55' },
+        { id: 3, name: 'Nasi Merah Ikan Pepes', category: 'Ikan', description: 'Kekayaan rempah nusantara dengan ikan kembung pilihan.', calories: 420, protein: 30, carbs: 45, fats: 12, allergens: ['fish'], image_url: 'https://6a2ed140d2c53535166b76e0.imgix.net/NasiMerahIkanPepes.png' },
       ];
   }
 };
